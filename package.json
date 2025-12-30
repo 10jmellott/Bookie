@@ -1,11 +1,11 @@
 {
 	"name": "bookie",
 	"type": "module",
-	"license": "0BSD",
+	"license": "UNLICENSED",
 	"version": "1.0.0",
 	"scripts": {
 		"dev": "web-ext run",
-		"build": "web-ext build",
+		"build": "web-ext build --overwrite-dest",
 		"lint": "web-ext lint"
 	},
 	"devDependencies": {
