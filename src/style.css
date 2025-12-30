@@ -6,6 +6,13 @@
   --highlight: #FFFFFF11;
   --accent: #f06543;
   --nested-accent: #899878;
+
+  /* Light theme overrides */
+  @media (prefers-color-scheme: light) {
+    --background: #f7f7f2;
+    --foreground: black;
+    --highlight: #00000011;
+  }
 }
 
 /* Bookmark row with favicon */
