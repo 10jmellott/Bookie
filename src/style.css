@@ -1,34 +1,44 @@
 @import url("reset.css");
 
+:root {
+  --background: #121113;
+  --foreground: white;
+  --highlight: #FFFFFF11;
+  --accent: #f06543;
+  --nested-accent: #899878;
+}
+
 /* Bookmark row with favicon */
 .bookmark-row {
   display: flex;
   align-items: center;
   margin: 0 12px;
-  padding: 12px 20px;
+  padding: 8px 20px;
   border-radius: 6px;
   opacity: 0.5;
   filter: saturate(0);
   transition: background 0.2s, opacity 0.2s, filter 0.2s;
+  line-height: 1.2;
+  text-decoration: none;
 
   &:hover {
     filter: saturate(1);
-    background: #FFFFFF22;
+    background: var(--highlight);
     opacity: 1;
   }
 }
 
 .bookmark-favicon {
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   justify-content: center;
   align-items: center;
 
   &.fallback {
     display: inline-flex;
     overflow: hidden;
-    background: #f06543;
-    color: #000000;
+    background: var(--accent);
+    color: var(--foreground);
     border-radius: 4px;
     text-transform: uppercase;
     flex-shrink: 0;
@@ -37,40 +47,43 @@
   }
 }
 
-.bookmark-row {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-}
-
 .bookmark {
   margin-left: 8px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
+  display: block;
+  color: var(--foreground);
+  text-decoration: none;
+  word-break: break-all;
 }
 
 html,
 body {
   font-family: Arial, sans-serif;
-  background: #121113;
-  color: white;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 .folder-title {
-  font-size: 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   font-weight: bold;
-  background: #f06543;
+  background: var(--accent);
   padding: 8px 12px;
   text-align: center;
   margin: 8px 0;
 }
 
-.bookmark {
-  display: block;
-  color: white;
-  text-decoration: none;
-  word-break: break-all;
+.nested .folder-title {
+  background: var(--nested-accent);
+}
+
+.folder:first-child .folder-title {
+  margin-top: 0;
+}
+
+.folder:last-child {
+  margin-bottom: 8px;
 }

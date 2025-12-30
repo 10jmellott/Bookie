@@ -1,16 +1,26 @@
 import { loadIcon } from './icon-loader.js';
 
-function renderFolder(node) {
+function renderFolder(node, isNested = false) {
   const folderDiv = document.createElement('div');
-  folderDiv.className = 'folder';
+  folderDiv.className = 'folder' + (isNested ? ' nested' : '');
   const title = document.createElement('h2');
   title.className = 'folder-title';
   title.textContent = node.title;
   folderDiv.appendChild(title);
   if (node.children && node.children.length > 0) {
-    renderBookmarks(node.children, folderDiv);
+    renderBookmarks(node.children, folderDiv, true);
   }
   return folderDiv;
+}
+
+function renderBookmarks(nodes, container, isNested = false) {
+  nodes.forEach(node => {
+    if (node.type === 'folder') {
+      container.appendChild(renderFolder(node, isNested));
+    } else if (node.type === 'bookmark') {
+      container.appendChild(renderBookmark(node));
+    }
+  });
 }
 
 function renderBookmark(node) {
@@ -40,29 +50,7 @@ function renderBookmark(node) {
   titleEl.textContent = node.title || node.url;
   linkEl.appendChild(titleEl);
 
-  // Load and set the favicon
-  loadIcon(node.url).then(iconUrl => {
-    if (iconUrl) {
-      iconEl.style.backgroundImage = `url(${iconUrl})`;
-      iconEl.classList.remove('fallback');
-      iconEl.innerText = '';
-    }
-  }).catch(() => {
-    // Ignore errors, fallback will be shown
-  });
-
   return linkEl;
-}
-
-// Sidebar version mirrors popup but uses links that open in the current window's tab
-function renderBookmarks(nodes, container) {
-  nodes.forEach(node => {
-    if (node.type === 'folder') {
-      container.appendChild(renderFolder(node));
-    } else if (node.type === 'bookmark') {
-      container.appendChild(renderBookmark(node));
-    }
-  });
 }
 
 function findBookmarksMenu(nodes) {

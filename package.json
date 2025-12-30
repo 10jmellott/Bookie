@@ -1,5 +1,8 @@
 {
+	"name": "bookie",
+	"type": "module",
 	"license": "0BSD",
+	"version": "1.0.0",
 	"scripts": {
 		"dev": "web-ext run",
 		"build": "web-ext build",
