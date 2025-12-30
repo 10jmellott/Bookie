@@ -1,0 +1,76 @@
+@import url("reset.css");
+
+/* Bookmark row with favicon */
+.bookmark-row {
+  display: flex;
+  align-items: center;
+  margin: 0 12px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  opacity: 0.5;
+  filter: saturate(0);
+  transition: background 0.2s, opacity 0.2s, filter 0.2s;
+
+  &:hover {
+    filter: saturate(1);
+    background: #FFFFFF22;
+    opacity: 1;
+  }
+}
+
+.bookmark-favicon {
+  width: 16px;
+  height: 16px;
+  justify-content: center;
+  align-items: center;
+
+  &.fallback {
+    display: inline-flex;
+    overflow: hidden;
+    background: #f06543;
+    color: #000000;
+    border-radius: 4px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+}
+
+.bookmark-row {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.bookmark {
+  margin-left: 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+html,
+body {
+  font-family: Arial, sans-serif;
+  background: #121113;
+  color: white;
+}
+
+.folder-title {
+  font-size: 18px;
+  font-weight: bold;
+  background: #f06543;
+  padding: 8px 12px;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.bookmark {
+  display: block;
+  color: white;
+  text-decoration: none;
+  word-break: break-all;
+}

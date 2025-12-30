@@ -1,0 +1,15 @@
+{
+	"license": "0BSD",
+	"scripts": {
+		"dev": "web-ext run",
+		"build": "web-ext build",
+		"lint": "web-ext lint"
+	},
+	"devDependencies": {
+		"web-ext": "^9.2.0"
+	},
+	"webExt": {
+		"sourceDir": "src",
+		"artifactsDir": "dist"
+	}
+}
