@@ -1,13 +1,67 @@
-import { loadIcon } from './icon-loader.js';
+// Store expanded/collapsed state by folder id, persisted in browser.storage.local
+let folderState = {};
+
+function saveFolderState() {
+  if (typeof browser !== 'undefined' && browser.storage && browser.storage.local) {
+    browser.storage.local.set({ folderState });
+  }
+}
+
+function loadFolderState() {
+  return new Promise(resolve => {
+    if (typeof browser !== 'undefined' && browser.storage && browser.storage.local) {
+      browser.storage.local.get('folderState').then(data => {
+        if (data && data.folderState) {
+          folderState = data.folderState;
+        }
+        resolve();
+      }).catch(() => resolve());
+    } else {
+      resolve();
+    }
+  });
+}
 
 function renderFolder(node, isNested = false) {
   const folderDiv = document.createElement('div');
   folderDiv.className = 'folder' + (isNested ? ' nested' : '');
+
+  // Default: root expanded, nested collapsed
+  if (!(node.id in folderState)) {
+    folderState[node.id] = !isNested;
+  }
+  const expanded = folderState[node.id];
+
   const title = document.createElement('h2');
   title.className = 'folder-title';
-  title.textContent = node.title;
+
+  title.append(document.createTextNode(node.title));
+
+  // Add expand/collapse chevron
+  const chevron = document.createElement('span');
+  chevron.className = 'chevron';
+  chevron.textContent = expanded ? '[-]' : '[+]';
+  chevron.style.marginRight = '8px';
+  title.appendChild(chevron);
+
+  // Make the entire title clickable
+  title.addEventListener('click', (e) => {
+    e.stopPropagation();
+    folderState[node.id] = !folderState[node.id];
+    saveFolderState();
+    // Re-render the whole tree
+    const root = document.getElementById('root');
+    if (root) {
+      // Save scroll position
+      const scroll = root.scrollTop;
+      refreshBookmarks();
+      root.scrollTop = scroll;
+    }
+  });
   folderDiv.appendChild(title);
-  if (node.children && node.children.length > 0) {
+
+  // Children only rendered if expanded (already implemented)
+  if (expanded && node.children && node.children.length > 0) {
     renderBookmarks(node.children, folderDiv, true);
   }
   return folderDiv;
@@ -66,24 +120,27 @@ function findBookmarksMenu(nodes) {
   return null;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  function refreshBookmarks() {
-    browser.bookmarks.getTree().then(tree => {
-      const menu = findBookmarksMenu(tree);
-      const root = document.getElementById('root');
-      root.innerHTML = '';
-      if (menu && menu.children) {
-        renderBookmarks(menu.children, root);
-      } else {
-        root.textContent = 'No bookmarks found.';
-      }
-    }).catch(err => {
-      document.getElementById('root').textContent = 'Error reading bookmarks';
-      console.error(err);
-    });
-  }
+// Expose refreshBookmarks globally for chevron click
+function refreshBookmarks() {
+  browser.bookmarks.getTree().then(tree => {
+    const menu = findBookmarksMenu(tree);
+    const root = document.getElementById('root');
+    root.innerHTML = '';
+    if (menu && menu.children) {
+      renderBookmarks(menu.children, root);
+    } else {
+      root.textContent = 'No bookmarks found.';
+    }
+  }).catch(err => {
+    document.getElementById('root').textContent = 'Error reading bookmarks';
+    console.error(err);
+  });
+}
 
-  refreshBookmarks();
+document.addEventListener('DOMContentLoaded', () => {
+  loadFolderState().then(() => {
+    refreshBookmarks();
+  });
 
   // Listen for bookmark changes and refresh
   const events = [
